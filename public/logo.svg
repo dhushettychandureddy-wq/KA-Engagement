@@ -1,0 +1,7 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <rect width="180" height="180" rx="34" fill="#733f46"/>
+  <circle cx="90" cy="90" r="71" fill="none" stroke="#f5d99e" stroke-width="2"/>
+  <circle cx="90" cy="90" r="63" fill="none" stroke="#f5d99e" stroke-opacity=".5"/>
+  <path fill="#f5d99e" d="m90 35 3 6 6 3-6 3-3 6-3-6-6-3 6-3zm0 92 3 6 6 3-6 3-3 6-3-6-6-3 6-3z"/>
+  <text x="90" y="104" text-anchor="middle" fill="#f5d99e" font-family="Georgia, serif" font-size="38">K&amp;A</text>
+</svg>

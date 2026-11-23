@@ -1,8 +1,8 @@
 export const invitation = {
-  names: ['Keethana Reddy', 'Anji Reddy'],
+  names: ['Keerthana Reddy', 'Anji Reddy'],
   families: [
-    { child: 'Keethana Reddy', relationship: 'daughter', parents: 'Veerareddy and Kavitha' },
-    { child: 'Anji Reddy', relationship: 'son', parents: 'Thirupathi Reddy and Rajitha' },
+    { child: 'Keerthana Reddy', relationship: 'daughter', parents: 'Kedika Veera Reddy and Kavitha' },
+    { child: 'Anji Reddy', relationship: 'son', parents: 'Dhushetty Thirupathi Reddy and Rajitha' },
   ],
   location: 'Guggilla, Bejjanki',
   district: 'Siddipet District, Telangana 505528',

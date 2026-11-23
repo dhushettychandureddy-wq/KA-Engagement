@@ -46,7 +46,12 @@ function ScrollingInvitation({ playing, onMusic }) {
         <a href="#couple">{monogram}</a>
         <nav aria-label="Invitation sections">
           <a href="#ceremony">Ceremony</a><a href="#venue">Venue</a>
-          <button aria-label={playing ? 'Pause music' : 'Play music'} onClick={onMusic}>{playing ? '♫ Ⅱ' : '♫ ▷'}</button>
+          <button type="button" className="music-button" aria-label={playing ? 'Pause music' : 'Play music'} onClick={onMusic}>
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 5 6 9H3v6h3l5 4z" />
+              {playing ? <path d="M15 9a4 4 0 0 1 0 6m2.8-8.8a8 8 0 0 1 0 11.6" /> : <path d="m16 9 5 6m0-6-5 6" />}
+            </svg>
+          </button>
         </nav>
       </header>
       <div className="scroll-sheet stationery">
@@ -73,7 +78,13 @@ function ScrollingInvitation({ playing, onMusic }) {
           <p className="script-label">The venue</p>
           <h2>{invitation.location}</h2>
           <address>{invitation.district}</address>
-          <a className="button" href={invitation.directions} target="_blank" rel="noreferrer">Get directions</a>
+          <a className="button directions-button" href={invitation.directions} target="_blank" rel="noreferrer">
+            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19.5 10c0 5.1-7.5 11.2-7.5 11.2S4.5 15.1 4.5 10a7.5 7.5 0 1 1 15 0Z" />
+              <circle cx="12" cy="10" r="2.5" />
+            </svg>
+            Get directions
+          </a>
           <PaintedScene src={pavilion} className="scene-art pavilion-art" />
           <details className="venue-map">
             <summary>View venue map</summary>
@@ -145,7 +156,13 @@ export default function App() {
               <div className="monogram" aria-hidden="true">{monogram}</div>
               <h1>Engagement<br /><em>Invitation</em></h1>
               <img className="cover-rings" src={joinedHands} width="640" height="800" alt="Painted hands clasped together, with a gold engagement ring and jasmine bangles" />
-              <button className="button" onClick={openInvitation}>Open invitation</button>
+              <button type="button" className="button" onClick={openInvitation}>
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2.5" y="5" width="19" height="14" rx="2" />
+                  <path d="m3.5 6.5 8.5 6 8.5-6" />
+                </svg>
+                Open invitation
+              </button>
             </m.div>
           </m.section>
         )}

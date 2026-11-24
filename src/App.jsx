@@ -1,15 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, useReducedMotion } from 'motion/react'
 import * as m from 'motion/react-m'
 import { invitation } from './event.js'
 import DateReveal from './DateReveal.jsx'
 import ganesh from './assets/ganesh-blessing.webp'
 import couple from './assets/couple-704.webp'
+import bridePortrait from './assets/keerthana-portrait.webp'
+import groomPortrait from './assets/anji-portrait.webp'
 import joinedHands from './assets/joined-hands.webp'
 import exchangeHands from './assets/ring-exchange-hands.webp'
 import pavilion from './assets/pavilion.webp'
 import ringExchange from './assets/ring-exchange.webp'
 
+const portraits = { bride: bridePortrait, groom: groomPortrait }
 const monogram = invitation.names.map(name => name[0]).join('&')
 
 function PaintedScene({ src, className, alt = '' }) {
@@ -37,15 +40,73 @@ function FlowerShower() {
   )
 }
 
+function FamilyPortraits() {
+  const groupId = useId()
+  return invitation.families.map(family => (
+    <article className="portrait-profile" key={family.role} aria-labelledby={`${groupId}-${family.role}`}>
+      <div className="portrait-frame">
+        <div className="portrait-window">
+          <img className="portrait-medallion" src={portraits[family.role]}
+            alt={`Watercolor portrait of ${family.child}`} width="600" height="800"
+            loading="lazy" />
+        </div>
+        <span className="frame-lotus" aria-hidden="true"><i /></span>
+      </div>
+      <header className="portrait-caption">
+        <p className="portrait-role">The {family.role}</p>
+        <h3 id={`${groupId}-${family.role}`}>{family.child}</h3>
+        <p className="family-parents"><span>{family.relationship} of</span>{' '}{family.parents}</p>
+      </header>
+    </article>
+  ))
+}
+
+function InvitationPortraits({ children }) {
+  const familyTitleId = useId()
+  return (
+    <div className="portrait-sequence">
+      <img className="couple-art" src={couple} width="704" height="939" alt="Keerthana and Anji together" />
+      {children}
+      <section className="family-section" aria-labelledby={familyTitleId}>
+        <header className="family-intro">
+          <img className="family-idol" src={ganesh} alt="Lord Ganesh" width="320" height="308" loading="lazy" />
+          <h2 id={familyTitleId}>The Families</h2>
+          <span className="family-ornament" aria-hidden="true">&#10022;</span>
+          <p>Two hearts, one lineage of love</p>
+        </header>
+        <FamilyPortraits />
+      </section>
+    </div>
+  )
+}
+
 function ScrollingInvitation({ playing, onMusic }) {
+  const [showFamilies, setShowFamilies] = useState(() => window.location.hash === '#families')
   const heading = useRef(null)
-  useEffect(() => { heading.current?.focus({ preventScroll: true }) }, [])
+  const familyHeading = useRef(null)
+
+  useEffect(() => {
+    const syncPage = () => setShowFamilies(window.location.hash === '#families')
+    window.addEventListener('hashchange', syncPage)
+    syncPage()
+    return () => window.removeEventListener('hashchange', syncPage)
+  }, [])
+
+  useLayoutEffect(() => {
+    if (showFamilies) {
+      window.scrollTo(0, 0)
+      familyHeading.current?.focus({ preventScroll: true })
+    } else {
+      heading.current?.focus({ preventScroll: true })
+      if (window.location.hash === '#couple') heading.current?.closest('section')?.scrollIntoView()
+    }
+  }, [showFamilies])
   return (
     <div className="scroll-invitation">
       <header className="invite-nav">
-        <a href="#couple">{monogram}</a>
+        {showFamilies ? <a href="#couple">Back to invitation</a> : <a href="#couple">{monogram}</a>}
         <nav aria-label="Invitation sections">
-          <a href="#ceremony">Ceremony</a><a href="#venue">Venue</a>
+          {!showFamilies && <><a href="#ceremony">Ceremony</a><a href="#venue">Venue</a></>}
           <button type="button" className="music-button" aria-label={playing ? 'Pause music' : 'Play music'} onClick={onMusic}>
             <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
               <path d="M11 5 6 9H3v6h3l5 4z" />
@@ -54,20 +115,20 @@ function ScrollingInvitation({ playing, onMusic }) {
           </button>
         </nav>
       </header>
-      <div className="scroll-sheet stationery">
-        <section id="couple" className="story-page">
+      <div className="scroll-sheet stationery" hidden={showFamilies}>
+        <section id="couple" className="story-page couple-page" aria-labelledby="couple-heading">
           <FlowerShower />
-          <h1 className="names" tabIndex={-1} ref={heading}>
-            {invitation.families.map((family, index) => (
-              <span className="family-entry" key={family.child}>
-                {index > 0 && <em>&amp;</em>}
-                {family.child}
-                <span className="family-parents">{family.relationship} of {family.parents}</span>
-              </span>
-            ))}
-          </h1>
-          <img className="couple-art" src={couple} width="704" height="1056" alt="Illustrated portrait of the couple" />
-          <p>Both families invite you to join us and bless the couple on their engagement.</p>
+          <header className="couple-intro">
+            <p className="portrait-role">About the couple</p>
+            <h1 id="couple-heading" ref={heading} tabIndex={-1}>
+              <span>{invitation.names[0]}</span>
+              <em>and</em>
+              <span>{invitation.names[1]}</span>
+            </h1>
+            <p className="couple-quote">&ldquo;Two families, one beautiful beginning.&rdquo;</p>
+            <p className="couple-blessing">With the blessings of our families, we begin this beautiful journey together.</p>
+          </header>
+          <InvitationPortraits />
         </section>
         <section id="ceremony" className="story-page">
           <h2>The ceremony</h2>
@@ -97,6 +158,16 @@ function ScrollingInvitation({ playing, onMusic }) {
           <p>Your presence would be the greatest gift we could receive.</p>
         </footer>
       </div>
+      {showFamilies && (
+        <div className="scroll-sheet stationery">
+          <section className="story-page families-page" aria-labelledby="families-heading">
+            <h1 id="families-heading" ref={familyHeading} tabIndex={-1}>Our families</h1>
+            <InvitationPortraits>
+              <p>Both families invite you to join us and bless the couple on their engagement.</p>
+            </InvitationPortraits>
+          </section>
+        </div>
+      )}
     </div>
   )
 }
